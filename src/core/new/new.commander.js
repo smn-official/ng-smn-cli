@@ -13,7 +13,7 @@ function start() {
         .action(callback);
 }
 
-
+// TODO: Instalar smn-ui
 async function callback(name, cmd) {
     try {
         name = name.toLocaleLowerCase();
@@ -27,8 +27,8 @@ async function callback(name, cmd) {
         } else if (cmd.package) {
 
         } else {
-            await service.mkdir();
-            // service.generateErrorModules(name);
+            await service.mkdir(name);
+            service.generateErrorModules(name);
         }
 
         console.log(`Done! ${name} was raised.`);

@@ -20,8 +20,5 @@
     "bluebird": "^3.5.1",
     "child_process": "^1.0.2",
     "commander": "^2.15.1"
-  },
-  "devDependencies": {
-    "@angular/cli": "^1.7.3"
   }
 }

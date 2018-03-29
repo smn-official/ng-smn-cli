@@ -1,6 +1,7 @@
 const {exec} = require('child_process');
 const Promise = require('bluebird');
 const path = require('path');
+const fs = require('fs');
 const config = require('../../../config');
 
 module.exports = {
@@ -34,7 +35,7 @@ async function mkdir(name) {
              path.join(config.url.base, name, 'src/app/views')
         ];
 
-        exec(`mkdir -r ${dirs.join(' ')}`, error => {
+        exec(`mkdir ${dirs.join(' ')}`, error => {
             if (error) {
                 const customError = {
                     cause: `Error to create dirs`,
@@ -51,7 +52,7 @@ async function mkdir(name) {
 
 function generateErrorModules(name) {
     return new Promise((resolve, reject) => {
-        exec(`cp -r ${path.join(config.url.helpers, 'modules/errors')} ${path.join(config.url.base, name)}`, error => {
+        exec(`cp -r ${path.join(config.url.helpers, 'modules/errors')} ${path.join(config.url.base, name, 'src/app/views')}`, error => {
             if (error) {
                 const customError = {
                     cause: `Error to generate errors modules`,
