@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const devkit = require('./devkit');
 const config = require('../../config');
 const fileManager = require('./file-manager');
 
