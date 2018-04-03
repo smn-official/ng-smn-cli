@@ -6,7 +6,7 @@ commander
     .version('1.0.0')
     .description('SMN Cli builds projects and cruds for Angular applications');
 
-newCommander();
+new newCommander();
 
 
 commander.parse(process.argv);

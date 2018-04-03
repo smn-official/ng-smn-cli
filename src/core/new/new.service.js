@@ -1,8 +1,8 @@
 const {exec} = require('child_process');
 const Promise = require('bluebird');
 const path = require('path');
-const fs = require('fs');
 const config = require('../../../config');
+const InjectImports = require('../../helpers/inject-imports');
 
 module.exports = {
     newProject,
@@ -18,7 +18,6 @@ async function newProject(name) {
                     cause: `Error to create ${name}`,
                     original: error
                 };
-
                 return reject(customError);
             }
 
@@ -50,19 +49,12 @@ async function mkdir(name) {
     });
 }
 
-function generateErrorModules(name) {
-    return new Promise((resolve, reject) => {
-        exec(`cp -r ${path.join(config.url.helpers, 'modules/errors')} ${path.join(config.url.base, name, 'src/app/views')}`, error => {
-            if (error) {
-                const customError = {
-                    cause: `Error to generate errors modules`,
-                    original: error
-                };
+async function generateErrorModules(name) {
+    return new Promise(async (resolve) => {
+        const dest = path.join(config.url.base, name, 'src/app/views');
 
-                return reject(customError);
-            }
-
-            resolve();
-        });
-    })
+        const injectImports = new InjectImports(`${dest}/errors/error.module.ts`, 'ErrorModule');
+        await injectImports.inject();
+        resolve();
+    });
 }
