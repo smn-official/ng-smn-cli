@@ -9,7 +9,11 @@ module.exports = {
     mkdir,
     generateErrorModules
 };
-
+/**
+ * @description Cria um projeto em Angular Cli
+ * @param name - Nome do projeto
+ * @return Promise
+ * **/
 async function newProject(name) {
     return new Promise((resolve, reject) => {
         exec(`ng new ${name} --style=scss --skip-install`, error => {
@@ -26,6 +30,11 @@ async function newProject(name) {
     })
 }
 
+/**
+ * @description Cria todas pastas necessárias para serem usadas pelos outros métodos
+ * @param name - Nome do projeto
+ * @return Promise
+ * **/
 async function mkdir(name) {
     return new Promise((resolve, reject) => {
         const dirs = [
@@ -49,6 +58,11 @@ async function mkdir(name) {
     });
 }
 
+/**
+ * @description Cria o módulo de erros
+ * @param name - Nome do projeto
+ * @return Promise
+ * **/
 async function generateErrorModules(name) {
     return new Promise(async (resolve) => {
         const dest = path.join(config.url.base, name, 'src/app/views');
