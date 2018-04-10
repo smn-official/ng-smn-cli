@@ -3,7 +3,8 @@ const fs = require('fs');
 
 module.exports = {
     copy,
-    read
+    read,
+    create
 };
 
 /**
@@ -38,6 +39,24 @@ async function read(src) {
             }
 
             resolve(data.toString());
+        });
+    });
+}
+
+/**
+ * @description Cria um arquivo
+ * @param src - Caminho do arquivo a ser criado
+ * @param content - Contéudo que será inserido no arquivo
+ * @return Promise
+ * **/
+async function create(src, content) {
+    return new Promise((resolve, reject) => {
+        fs.appendFile(src, content, (err, data) => {
+            if (err) {
+                return reject(err);
+            }
+
+            resolve();
         });
     });
 }
