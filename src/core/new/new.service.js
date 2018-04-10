@@ -16,7 +16,7 @@ module.exports = {
  * **/
 async function newProject() {
     return new Promise((resolve, reject) => {
-        console.log('\n  Angular Cli is generating ');
+        console.log('\n  Angular Cli is generating your project');
         exec(`ng new ${Project.name} --style=scss --skip-install`, error => {
             if (error) {
                 const customError = {
@@ -25,7 +25,8 @@ async function newProject() {
                 };
                 return reject(customError);
             }
-            
+
+            console.log('\n  Angular Cli finished your job');
             resolve();
         });
     });
