@@ -21,8 +21,8 @@ class New {
             console.log(`\nCreating ${Project.name}...`);
 
             await service.newProject();
-            await service.installSMNUI();
-
+            // await service.installSMNUI();
+            //
             await Project.createConfig();
 
             if (cmd.blank) {
@@ -32,6 +32,7 @@ class New {
             } else {
                 await service.mkdir();
                 await service.generateErrorModules();
+                await service.generateSharedModule();
             }
 
             console.log(`\nDone! ${Project.name} was raised.`);
