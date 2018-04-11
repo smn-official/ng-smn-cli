@@ -21,6 +21,7 @@ class New {
             console.log(`\nCreating ${Project.name}...`);
 
             await service.newProject();
+            await service.installSMNUI();
 
             await Project.createConfig();
 

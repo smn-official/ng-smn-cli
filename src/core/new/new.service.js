@@ -1,4 +1,4 @@
-const {exec} = require('child_process');
+const {exec, execSync} = require('child_process');
 const Promise = require('bluebird');
 const path = require('path');
 const config = require('../../../config');
@@ -7,6 +7,7 @@ const Project = require('../../helpers/project');
 
 module.exports = {
     newProject,
+    installSMNUI,
     mkdir,
     generateErrorModules
 };
@@ -26,7 +27,27 @@ async function newProject() {
                 return reject(customError);
             }
 
-            console.log('\n  Angular Cli finished your job');
+            console.log('  Angular Cli finished your job');
+            resolve();
+        });
+    });
+}
+/**
+ * @description Cria um projeto em Angular Cli
+ * @return Promise
+ * **/
+async function installSMNUI() {
+    return new Promise((resolve, reject) => {
+        console.log('  Installing SMN UI');
+        exec(`cd ${Project.name} && npm install --save ng-smn-ui`, error => {
+            if (error) {
+                const customError = {
+                    cause: `Error to create ${Project.name}`,
+                    original: error
+                };
+                return reject(customError);
+            }
+            console.log('  SMN UI was install');
             resolve();
         });
     });
