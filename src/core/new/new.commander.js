@@ -1,6 +1,7 @@
 const commander = require('commander');
 const service = require('./new.service');
 const Project = require('../../helpers/project');
+const projectService = require('./new-project.service');
 
 class New {
     constructor() {
@@ -16,23 +17,21 @@ class New {
     // TODO: Instalar smn-ui
     async actionCommander(name, cmd) {
         try {
-            Project.name = name;
+            Project.config = { name };
 
             console.log(`\nCreating ${Project.name}...`);
 
             await service.newProject();
             // await service.installSMNUI();
             //
-            await Project.createConfig();
+            // await Project.createConfig();
 
             if (cmd.blank) {
 
             } else if (cmd.package) {
 
             } else {
-                await service.mkdir();
-                await service.generateErrorModules();
-                await service.generateSharedModule();
+                await projectService.generate();
             }
 
             console.log(`\nDone! ${Project.name} was raised.`);

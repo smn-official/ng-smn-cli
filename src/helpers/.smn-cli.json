@@ -1,4 +1,9 @@
 {
   "name": "{{NAME}}",
-  "type": "{{TYPE}}"
+  "type": "{{TYPE}}",
+  "apps": {
+    "auth": "{{AUTH}}",
+    "finance": "{{FINANCE}}",
+    "calendar": "{{CALENDAR}}"
+  }
 }

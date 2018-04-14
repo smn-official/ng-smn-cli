@@ -9,9 +9,6 @@ const fileManager = require('../../helpers/file-manager');
 module.exports = {
     newProject,
     installSMNUI,
-    mkdir,
-    generateErrorModules,
-    generateSharedModule
 };
 /**
  * @description Cria um projeto em Angular Cli
@@ -52,75 +49,5 @@ async function installSMNUI() {
             console.log('  SMN UI was install');
             resolve();
         });
-    });
-}
-
-/**
- * @description Cria todas pastas necessárias para serem usadas pelos outros métodos
- * @return Promise
- * **/
-async function mkdir() {
-    return new Promise((resolve, reject) => {
-        const dirs = [
-             path.join(config.url.project, 'src/app/core/shared'),
-             path.join(config.url.project, 'src/app/core/api'),
-             path.join(config.url.project, 'src/app/core/utils/user'),
-             path.join(config.url.project, 'src/app/views')
-        ];
-
-        exec(`mkdir ${dirs.join(' ')}`, error => {
-            if (error) {
-                const customError = {
-                    cause: `Error to create dirs`,
-                    original: error
-                };
-
-                return reject(customError);
-            }
-
-            resolve();
-        });
-    });
-}
-
-/**
- * @description Cria o módulo de erros
- * @return Promise
- * **/
-async function generateErrorModules() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const dest = path.join(config.url.project, 'src/app/views');
-
-            await fileManager.copy(path.join(config.url.helpers, 'modules/errors'), dest);
-
-            const injectImports = new InjectImports(`${dest}/errors/error.module.ts`, 'ErrorModule');
-            await injectImports.inject();
-            resolve();
-        }
-        catch (e) {
-            reject(e);
-        }
-    });
-}
-
-/**
- * @description Cria o módulo de compartilhamento
- * @return Promise
- * **/
-async function generateSharedModule() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const dest = path.join(config.url.project, 'src/app/core/shared');
-            await fileManager.copy(path.join(config.url.helpers, 'modules/shared.module.ts'), dest);
-
-            const injectImports = new InjectImports(`${dest}/shared.module.ts`, 'SharedModule');
-            await injectImports.inject();
-            resolve();
-
-        } catch (e) {
-            reject(e);
-        }
-
     });
 }

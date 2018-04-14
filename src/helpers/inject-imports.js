@@ -3,6 +3,7 @@ const path = require('path');
 
 const config = require('../../config');
 const fileManager = require('./file-manager');
+const excludeFiles = ['shared.module.ts', 'app.route.module.ts'];
 
 class InjectImports {
 

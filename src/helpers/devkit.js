@@ -3,11 +3,12 @@
  * @param value - Valor a ser encontrado no array
  * @return int
  * **/
-Array.prototype.lasIndex = function (value) {
+Array.prototype.lasIndex = function (value, exclude) {
     let index = -1;
     this.map((item, i) => {
-        if(item.indexOf(value) !== -1)
+        if (item.indexOf(value) !== -1 && this[i].indexOf(exclude) === -1){
             index = i;
+        }
     });
     return index;
 };
@@ -27,4 +28,15 @@ Array.prototype.index = function (value, start) {
     }
 
     return index;
+};
+
+String.prototype.capitalize = function () {
+    const valueArray = this.split(/[\-_]+/);
+    let newValue = '';
+
+    valueArray.map(name => {
+        newValue += name.charAt(0).toUpperCase() + name.substring(1);
+    });
+
+    return newValue;
 };
