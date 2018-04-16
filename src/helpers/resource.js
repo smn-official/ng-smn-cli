@@ -1,75 +1,17 @@
 const config = require('../../config');
 const fs = require('fs');
 const path = require('path');
+const InjectionManager = require('./injection-manager');
+
 const excludeFiles = ['shared.module.ts', 'app.route.module.ts'];
-const fileManager = require('./file-manager');
 
-class InjectionManger {
-    async inject(path, closerModule) {
-        this.fileData = await fileManager.read(closerModule);
-        this.injectImport(InjectionManger.findRelativePath(closerModule, path));
-        this.injectIn(this.getTypeInject());
-        InjectionManger.writeInFile(closerModule, this.fileData);
-    }
-
-    injectImport(relativePath) {
-        const content = `import { ${this.className} } from '${relativePath.replace('.ts', '')};`;
-        const imports = this.fileData.match(/(^import\s*{.+}\s*from\s*'.+';)/gm);
-        const fileDataList = this.fileData.split('\n');
-        const position = fileDataList.indexOf(imports[imports.length - 1]) + 1;
-        fileDataList.splice(position, 0, content);
-        this.fileData = fileDataList.join('\n');
-    }
-
-    injectIn(where) {
-        let regex = `(${where}:\\s*\\[)(.*\\s)*(?=])`;
-        let occurrence = this.fileData.match(new RegExp(regex, 'gm'));
-        if (occurrence && !occurrence.length) {
-            //TODO: Custom error
-            throw 'Não é um arquivo';
-        }
-
-        occurrence = occurrence[0].replace(/\t*\s*/g, '').replace('imports:[', '');
-        let imports = occurrence.split(',').filter(importValue => importValue);
-
-        imports.push(this.className);
-        imports = imports.map(importValue => '"' + importValue + '"');
-
-        let imported = JSON.stringify(JSON.parse('[' + imports.join(',') + ']'), undefined, 4);
-        imported = imported.replace(/"/g, '').replace(']', '  ');
-
-        regex = `(${where}:\\s*\\[)(.*\\s)*(?=])`;
-        this.fileData = this.fileData.replace(new RegExp(regex, 'gm'), 'imports: ' + imported);
-    }
-
-    getTypeInject() {
-        // TODO: Retornar o tipo do component, directive e crud
-        switch (this.type) {
-            case 'module':
-                return 'imports';
-        }
-    }
-
-    static findRelativePath(from, to) {
-        from = path.join(path.dirname(from));
-        to = path.join(to);
-
-        //Verificando se o caminho de partida é relativo ao caminho a ser encontrado
-        const start = to.indexOf(from) !== -1 ? './' : '';
-        let relativePath = `${start}${path.relative(from, to)}`;
-        relativePath = relativePath.replace(/[\\]/g, '/');
-
-        return relativePath;
-    }
-
-    static writeInFile(src, content) {
-        const file = fs.openSync(src, 'r+');
-        const bufferedText = new Buffer(content);
-        fs.writeSync(file, bufferedText, 0, bufferedText.length);
-    }
-}
-
-class Resource extends InjectionManger {
+class Resource extends InjectionManager {
+    /**
+     * @constructor
+     * @param {string} type - Tipo do recurso
+     * @param {string} name - Nome da clasee
+     * @returns {Resource}
+     * */
     constructor(type, name) {
         super();
         this.name = name;
@@ -78,6 +20,11 @@ class Resource extends InjectionManger {
         super.filename = this.filename = `${this.name}.${this.type}.ts`;
     }
 
+    /**
+     * Encontra o módulo mais próximo
+     * @param {string} _path - Caminho de partida
+     * @return {string}
+     * */
     findRelativeModule(_path) {
         if (!_path.includes(config.url.base)) {
             throw console.log('InjectImport: File not found!');
@@ -97,6 +44,11 @@ class Resource extends InjectionManger {
         return this.findRelativeModule(_path);
     }
 
+    /**
+     * Verifica se existe um módulo na pasta
+     * @param {string} _path - Caminho da pasta a ser lida
+     * @returns {string}
+     * */
     moduleExists(_path) {
         let filename;
         const files = fs.readdirSync(_path);
@@ -111,8 +63,14 @@ class Resource extends InjectionManger {
         return filename || '';
     }
 
-    async inject(path) {
-        await super.inject(path, this.findRelativeModule(path))
+
+    /**
+     * Injeta o novo recurso na aplicação
+     * @param {string} _path - Caminho do arquivo a ser injetado
+     * @returns {void}
+     * */
+    async inject(_path) {
+        await super.inject(_path, this.findRelativeModule(_path))
     }
 
 }

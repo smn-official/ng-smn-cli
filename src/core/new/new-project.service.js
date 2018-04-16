@@ -2,7 +2,6 @@ const {exec} = require('child_process');
 const Promise = require('bluebird');
 const path = require('path');
 const config = require('../../../config');
-const InjectImports = require('../../helpers/inject-imports');
 const Resource = require('../../helpers/resource');
 const fileManager = require('../../helpers/file-manager');
 
@@ -12,8 +11,8 @@ module.exports = {
 
 async function generate() {
     await mkdir();
-    await generateErrorModules();
     await generateSharedModule();
+    await generateErrorModules();
 }
 
 /**
@@ -70,7 +69,7 @@ async function generateErrorModules() {
 async function generateSharedModule() {
     return new Promise(async (resolve, reject) => {
         try {
-            const dest = path.join(config.url.project, 'src/app/core/shared');
+            const dest = path.join(config.url.project, 'src/app');
             await fileManager.copy(path.join(config.url.helpers, 'modules/shared.module.ts'), dest);
             const module = new Resource('module', 'shared');
             await module.inject(`${dest}/shared.module.ts`);

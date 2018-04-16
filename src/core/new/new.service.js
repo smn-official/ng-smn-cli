@@ -2,7 +2,6 @@ const {exec, execSync} = require('child_process');
 const Promise = require('bluebird');
 const path = require('path');
 const config = require('../../../config');
-const InjectImports = require('../../helpers/inject-imports');
 const Project = require('../../helpers/project');
 const fileManager = require('../../helpers/file-manager');
 

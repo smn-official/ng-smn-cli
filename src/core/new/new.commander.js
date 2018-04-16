@@ -23,7 +23,7 @@ class New {
 
             await service.newProject();
             // await service.installSMNUI();
-            //
+
             // await Project.createConfig();
 
             if (cmd.blank) {
