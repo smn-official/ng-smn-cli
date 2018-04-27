@@ -14,7 +14,6 @@ class New {
             .action(this.actionCommander);
     }
 
-    // TODO: Instalar smn-ui
     async actionCommander(name, cmd) {
         try {
             Project.config = { name };
@@ -22,9 +21,9 @@ class New {
             console.log(`\nCreating ${Project.name}...`);
 
             await service.newProject();
-            // await service.installSMNUI();
+            await service.installSMNUI();
 
-            // await Project.createConfig();
+            await Project.createConfig();
 
             if (cmd.blank) {
 
@@ -37,6 +36,7 @@ class New {
             console.log(`\nDone! ${Project.name} was raised.`);
         } catch (e) {
             console.error(e);
+            await service.deleteProject();
         }
     }
 }

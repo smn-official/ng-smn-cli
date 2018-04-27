@@ -1,13 +1,11 @@
-const {exec, execSync} = require('child_process');
+const {exec} = require('child_process');
 const Promise = require('bluebird');
-const path = require('path');
-const config = require('../../../config');
 const Project = require('../../helpers/project');
-const fileManager = require('../../helpers/file-manager');
 
 module.exports = {
     newProject,
     installSMNUI,
+    deleteProject
 };
 /**
  * @description Cria um projeto em Angular Cli
@@ -46,6 +44,25 @@ async function installSMNUI() {
                 return reject(customError);
             }
             console.log('  SMN UI was install');
+            resolve();
+        });
+    });
+}
+
+/**
+ * @description Deleta o projeto se ocorrer um erro na criação
+ * @return Promise
+ * **/
+async function deleteProject() {
+    return new Promise((resolve, reject) => {
+        exec(`rm -rf ${Project.name}`, error => {
+            if (error) {
+                const customError = {
+                    cause: `Error to delete ${Project.name}`,
+                    original: error
+                };
+                return reject(customError);
+            }
             resolve();
         });
     });

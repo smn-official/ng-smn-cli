@@ -11,6 +11,7 @@ module.exports = {
 
 async function generate() {
     await mkdir();
+    await copyApiService();
     await generateSharedModule();
     await generateErrorModules();
 }
@@ -73,6 +74,22 @@ async function generateSharedModule() {
             await fileManager.copy(path.join(config.url.helpers, 'modules/shared.module.ts'), dest);
             const module = new Resource('module', 'shared');
             await module.inject(`${dest}/shared.module.ts`);
+            resolve();
+
+        } catch (e) {
+            reject(e);
+        }
+
+    });
+}
+
+async function copyApiService() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const src = path.join(config.url.helpers, 'services/api.service.project.ts');
+            const dest = path.join(config.url.project, 'src/app/core/api/api.service.ts');
+
+            await fileManager.copy(src, dest);
             resolve();
 
         } catch (e) {
